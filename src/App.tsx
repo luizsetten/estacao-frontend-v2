@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.scss';
-import Routes from './routes';
+import React from 'react';
+import { Router } from 'react-router-dom';
 
-const App: React.FC = () => (
-  <div className="App">
-    {/* <header className="App-header">
-      <img alt="logo" className="App-logo" src={logo} />
-      <p>
-        Edit <code>src/App.tsx</code> and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Learn React
-      </a>
-    </header> */}
-    <Routes/>
-  </div>
-);
+import Routes from './routes';
+import history from './services/history';
+import GlobalStyle from './styles/GlobalStyles';
+
+function App(): JSX.Element {
+  return (
+    <>
+      <Router history={history}>
+        <Routes />
+      </Router>
+      <GlobalStyle />
+    </>
+  );
+}
 
 export default App;

@@ -1,17 +1,16 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
-import { Switch, Route } from 'react-router-dom';
-
+import Info from '../pages/Info';
 import Main from '../pages/Main';
 import Widget from '../pages/Widget';
-import Info from '../pages/Info';
 
-export default function Routes() {
+export default function Routes(): JSX.Element {
   return (
     <Switch>
-      <Route exact path="/" component={Main} />
-      <Route exact path="/widget" component={Widget} />
-      <Route exact path="/info:id" component={Info} />
+      <Route component={Main} exact path="/" />
+      <Route component={Widget} exact path="/widget" />
+      <Route component={Info} exact path="/info:id" />
     </Switch>
   );
 }
