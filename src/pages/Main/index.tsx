@@ -45,13 +45,13 @@ function Main({
 
   const classes = useStyles();
 
-  function loadHandler() {
-    history.push(`/widget`);
-  }
-
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const selectedStation = stations
-      .find((stationF) => stationF.secure_id === event.target.value) || {
+    setStationSelected(event.target.value as string);
+  };
+
+  function loadHandler() {
+      const selectedStation = stations
+      .find((stationF) => stationF.secure_id === stationSelected) || {
       name: '',
       secure_id: '',
       city: '',
@@ -59,10 +59,9 @@ function Main({
       latitude: 0,
       longitude: 0
     };
-    console.log(event.target.value);
-    setStationSelected(event.target.value as string);
     setStation(selectedStation);
-  };
+    history.push(`/widget`);
+  }
 
   const loadStations = async () => {
     const response = await axios('/stations', { method: 'get'});
