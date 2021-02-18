@@ -8,13 +8,16 @@ export const Container = styled.div`
   justify-content: space-around;
 `;
 
-export const Text = styled.h2`
+export const TextLine = styled.h2`
   display: flex;
+  background: #FFF;
+
 `;
 
 export const WidgetContainer = styled.div`
   display: flex;
   background: #EBEBEB;
+  justify-content: space-evenly;
   border-radius: 15px;
   width: 450px;
   height: 600px;
