@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {
  Button, FormControl, InputLabel, MenuItem, Select, Typography
@@ -21,34 +21,63 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
   }),);
 
-function Main(): JSX.Element {
+interface Station {
+  name: string,
+  secure_id: string,
+  city: string,
+  uf: string,
+  latitude: number,
+  longitude: number
+}
+interface MainProps {
+  station: Station,
+  setStation: (station: Station) => void,
+  // stations: Station[],
+  // setStations: (stations: Station[]) => void
+}
+
+function Main({
+ station, setStation
+  // stations, setStations
+}: MainProps): JSX.Element {
+  const [stationSelected, setStationSelected] = useState<string>('');
+  const [stations, setStations] = useState<Station[]>([]);
+
   const classes = useStyles();
-  const [station, setStation] = useState('');
 
   function loadHandler() {
-    history.push('/widget');
+    history.push(`/widget`);
   }
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setStation(event.target.value as string);
+    const selectedStation = stations
+      .find((stationF) => stationF.secure_id === event.target.value) || {
+      name: '',
+      secure_id: '',
+      city: '',
+      uf: '',
+      latitude: 0,
+      longitude: 0
+    };
+    console.log(event.target.value);
+    setStationSelected(event.target.value as string);
+    setStation(selectedStation);
+  };
+
+  const loadStations = async () => {
+    const response = await axios('/stations', { method: 'get'});
+    console.log(response);
+    setStations(response.data);
   };
 
   useEffect(() => {
-    // const response = await axios('/stations')
-    //  Call axios here
+    loadStations();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const renderOptions = () => {
-
-  };
 
   return (
     <Container>
       <Typography>Selecione uma estação meteorológica no campo abaixo</Typography>
-      {/* <Select id="" name="">
-        <option value="">0000 - PCS - ISULDEMINAS 001</option>
-        Inserir a função que carrega as estações meteorológicas listadas na base de dados
-      </Select> */}
       <FormControl className={classes.formControl} variant="outlined">
         <InputLabel id="stationSelectorLabel">Estação</InputLabel>
         <Select
@@ -56,14 +85,16 @@ function Main(): JSX.Element {
           label="Estação"
           labelId="stationSelectorLabel"
           onChange={handleChange}
-          value={station}
+          value={stationSelected}
         >
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {stations.map((stationOpt) => <MenuItem
+          key={stationOpt.secure_id}
+          value={stationOpt.secure_id}>
+            {stationOpt.name}
+            </MenuItem>)}
         </Select>
       </FormControl>
       <Button color="primary" onClick={loadHandler} variant="contained">Carregar</Button>

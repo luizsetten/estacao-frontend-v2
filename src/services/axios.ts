@@ -1,11 +1,11 @@
 import axios, {AxiosRequestConfig} from "axios";
 
 const config: AxiosRequestConfig = {
-  baseURL: process.env.API_URL,
+  baseURL: 'http://localhost:3333/',
   timeout: 10000,
   responseType: 'json',
 };
 
-const axiosConfig = axios(config).then((response) => response).catch((error) => error);
+const axiosConfig = axios.create(config);
 
 export default axiosConfig;
