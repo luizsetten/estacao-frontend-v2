@@ -31,7 +31,7 @@ export default function Routes(): JSX.Element {
       station={station}
       />} exact path="/" />
       <Route component={() => <Widget station={station}/>} exact path="/widget" />
-      <Route component={Info} exact path="/info/:id" />
+      <Route component={() => <Info station={station}/>} exact path="/info" />
     </Switch>
   );
 }
