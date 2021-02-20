@@ -7,4 +7,5 @@ export interface Record extends Object {
   windDirection?: number,
   windSpeed?: number,
   solarIncidence?: number,
+  created_at?: string,
 }

@@ -3,17 +3,23 @@ import React from "react";
 import { ResponsiveLine } from "@nivo/line";
 
 interface Props {
-  data: any
+  data: any,
+  bottomLegend?: string,
+  leftLegend?: string
 }
 
-const MyResponsiveLine = ({ data /* see data tab */ }: Props): JSX.Element => (
+const MyResponsiveLine = ({
+ data /* see data tab */,
+  bottomLegend,
+  leftLegend
+}: Props): JSX.Element => (
   <ResponsiveLine
       axisBottom={{
           orient: 'bottom',
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: 'transportation',
+          legend: bottomLegend,
           legendOffset: 36,
           legendPosition: 'middle'
       }}
@@ -22,12 +28,13 @@ const MyResponsiveLine = ({ data /* see data tab */ }: Props): JSX.Element => (
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: 'count',
+          legend: leftLegend,
           legendOffset: -40,
           legendPosition: 'middle'
       }}
       axisRight={null}
       axisTop={null}
+      curve="monotoneX"
       data={data}
       legends={[
           {
@@ -78,5 +85,10 @@ const MyResponsiveLine = ({ data /* see data tab */ }: Props): JSX.Element => (
       }}
   />
 );
+
+MyResponsiveLine.defaultProps = {
+  bottomLegend: '',
+  leftLegend: ''
+};
 
 export default MyResponsiveLine;

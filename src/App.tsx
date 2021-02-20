@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
+import 'fontsource-roboto';
 
 import { createMuiTheme, MuiThemeProvider, SimplePaletteColorOptions} from '@material-ui/core';
 
