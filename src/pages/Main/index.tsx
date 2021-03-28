@@ -1,15 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react';
 
 import {
- Button, FormControl, InputLabel, MenuItem, Select, Typography
+ Button,
+ FormControl,
+ Grid,
+ InputLabel,
+ MenuItem,
+ Select,
+ Typography
 } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import axios from '../../services/axios';
 import history from '../../services/history';
-import {
- Container, Map
-} from './styles';
+import { Container } from './styles';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     formControl: {
@@ -64,9 +68,12 @@ function Main({
   }
 
   const loadStations = async () => {
-    const response = await axios('/stations', { method: 'get'});
-    console.log(response);
-    setStations(response.data);
+    try{
+      const response = await axios('/stations', { method: 'get'});
+      setStations(response.data);
+    } catch (e) {
+      console.error("Erro inesperado!");
+    }
   };
 
   useEffect(() => {
@@ -76,7 +83,11 @@ function Main({
 
   return (
     <Container>
+      <Grid container direction="column" justify="center"
+        md={4}>
+      <Grid item>
       <Typography>Selecione uma estação meteorológica no campo abaixo</Typography>
+      </Grid>
       <FormControl className={classes.formControl} variant="outlined">
         <InputLabel id="stationSelectorLabel">Estação</InputLabel>
         <Select
@@ -89,17 +100,17 @@ function Main({
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          {stations.map((stationOpt) => <MenuItem
+          {stations.map((stationOpt) => (
+          <MenuItem
           key={stationOpt.secure_id}
           value={stationOpt.secure_id}>
             {stationOpt.name}
-            </MenuItem>)}
+            </MenuItem>
+            ))}
         </Select>
       </FormControl>
       <Button color="primary" onClick={loadHandler} variant="contained">Carregar</Button>
-      <Typography>OU</Typography>
-      <Typography>Selecione uma estação meteorológica no mapa abaixo</Typography>
-      <Map />
+      </Grid>
     </Container>
   );
 }
