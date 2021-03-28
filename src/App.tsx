@@ -5,7 +5,7 @@ import 'fontsource-roboto';
 import {
   createMuiTheme,
   MuiThemeProvider,
-  SimplePaletteColorOptions,
+  // SimplePaletteColorOptions,
 } from '@material-ui/core';
 
 import Routes from './routes';
