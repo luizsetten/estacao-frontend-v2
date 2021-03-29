@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from "axios";
+import axios, { AxiosRequestConfig } from 'axios';
 
 const config: AxiosRequestConfig = {
   baseURL: 'http://localhost:3333/',

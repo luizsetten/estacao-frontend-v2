@@ -1,19 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  Button, Grid, Paper, Typography
-} from '@material-ui/core';
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { Button, Grid, Paper, Typography } from '@material-ui/core';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import brLocale from 'date-fns/locale/pt-BR';
 
 import MyResponsiveLine from '../../components/Chart';
 import axios from '../../services/axios';
 import history from '../../services/history';
-import {Record, Station} from '../../types';
+import { Record, Station } from '../../types';
 
 interface WidgetProps {
-  station: Station,
+  station: Station;
 }
 
 // const data = [
@@ -290,8 +288,8 @@ interface WidgetProps {
 // ];
 
 interface RecordEntry {
-  x: string,
-  y: number
+  x: string;
+  y: number;
 }
 
 function Info({ station }: WidgetProps): JSX.Element {
@@ -300,14 +298,14 @@ function Info({ station }: WidgetProps): JSX.Element {
 
   const [tempData, setTempData] = useState<Array<RecordEntry | undefined>>([]);
 
-  const [rec,setRec] = useState<Record>([]);
+  const [rec, setRec] = useState<Record>([]);
 
   const loadEntry = (records: Array<Record>) => {
     const array = records.map((record) => {
-      if(record.created_at && record.temperature) {
+      if (record.created_at && record.temperature) {
         const aa: RecordEntry = {
           x: record.created_at,
-          y: record.temperature
+          y: record.temperature,
         };
         return aa;
       }
@@ -318,86 +316,112 @@ function Info({ station }: WidgetProps): JSX.Element {
 
   const data = [
     {
-      id: "Temperatura",
+      id: 'Temperatura',
       // color: "#F55",
-      data: tempData
-    }
+      data: tempData,
+    },
   ];
 
   const loadRecord = async () => {
-    try{
-      if(!station.secure_id) return;
+    try {
+      if (!station.secure_id) return;
 
-      const {data: record} = await axios.get<Array<Record>>(`/records/${station.secure_id}`);
+      const { data: record } = await axios.get<Array<Record>>(
+        `/records/${station.secure_id}`
+      );
       setRec(record);
       loadEntry(record);
       console.log(record);
-    } catch(err) {
-      alert("erro");
+    } catch (err) {
+      alert('erro');
     }
   };
 
   useEffect(() => {
     loadRecord();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
-    <Button color="primary" onClick={() => history.push('/')} variant="contained">Retornar</Button>
+      <Button
+        color="primary"
+        onClick={() => history.push('/')}
+        variant="contained"
+      >
+        Retornar
+      </Button>
 
-    <Paper style={{ margin: 20, minHeight: 50, padding: 20}}>
-    <Grid
-    container
-    md={12}
-    spacing={2}
-    xs={12}>
-      <Grid item md={2} xs={12}>
-      <MuiPickersUtilsProvider locale={brLocale} utils={DateFnsUtils}>
+      <Paper style={{ margin: 20, minHeight: 50, padding: 20 }}>
+        <Grid container md={12} spacing={2} xs={12}>
+          <Grid item md={2} xs={12}>
+            <MuiPickersUtilsProvider locale={brLocale} utils={DateFnsUtils}>
+              <DateTimePicker
+                disableFuture
+                label="Data Incial"
+                onChange={setStartDate}
+                value={startDate}
+                variant="inline"
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+          <Grid item md={2} xs={12}>
+            <MuiPickersUtilsProvider locale={brLocale} utils={DateFnsUtils}>
+              <DateTimePicker
+                disableFuture
+                label="Data Incial"
+                onChange={setEndDate}
+                value={endDate}
+                variant="inline"
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+          <Grid item md={2} xs={12}>
+            <Button
+              color="primary"
+              onClick={() => console.log('oi')}
+              variant="contained"
+            >
+              Filtrar
+            </Button>
+          </Grid>
+          <Grid item md={2} xs={12}>
+            <Button
+              color="primary"
+              onClick={() => console.log('oi')}
+              variant="contained"
+            >
+              Baixar como .csv
+            </Button>
+          </Grid>
+          <Grid item md={2} xs={12}>
+            <Button
+              color="primary"
+              onClick={() => console.log('oi')}
+              variant="contained"
+            >
+              Baixar tudo como .csv
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
 
-      <DateTimePicker
-        disableFuture
-        label="Data Incial"
-        onChange={setStartDate}
-        value={startDate}
-        variant="inline"
-        />
-        </MuiPickersUtilsProvider>
-      </Grid>
-      <Grid item md={2} xs={12}>
-      <MuiPickersUtilsProvider locale={brLocale} utils={DateFnsUtils}>
-
-      <DateTimePicker
-        disableFuture
-        label="Data Incial"
-        onChange={setEndDate}
-        value={endDate}
-        variant="inline"
-        />
-        </MuiPickersUtilsProvider>
-      </Grid>
-      <Grid item md={2} xs={12}>
-         <Button color="primary" onClick={() => console.log("oi")} variant="contained">Filtrar</Button>
-      </Grid>
-      <Grid item md={2} xs={12}>
-         <Button color="primary" onClick={() => console.log("oi")} variant="contained">Baixar como .csv</Button>
-      </Grid>
-      <Grid item md={2} xs={12}>
-         <Button color="primary" onClick={() => console.log("oi")} variant="contained">Baixar tudo como .csv</Button>
-      </Grid>
-      </Grid>
-    </Paper>
-
-    <Grid container md={12} xs={12}>
-      <Grid item md={4} xs={12}>
-        <Paper style={{ margin: 20, minHeight: 200}}>
-          <Typography align="center" variant="h6">Grafico</Typography>
-          <div style={{height: 300}}>
-            <MyResponsiveLine bottomLegend="Data/Hora" data={data} leftLegend="Temperatura °C"/>
-          </div>
-        </Paper>
-      </Grid>
-      {/* <Grid item md={4} xs={12}>
+      <Grid container md={12} xs={12}>
+        <Grid item md={4} xs={12}>
+          <Paper style={{ margin: 20, minHeight: 200 }}>
+            <Typography align="center" variant="h6">
+              Grafico
+            </Typography>
+            <div style={{ height: 300 }}>
+              <MyResponsiveLine
+                bottomLegend="Data/Hora"
+                data={data}
+                leftLegend="Temperatura °C"
+              />
+            </div>
+          </Paper>
+        </Grid>
+        {/* <Grid item md={4} xs={12}>
         <Paper style={{ margin: 20, minHeight: 200}}>
           <Typography align="center" variant="h6">Grafico</Typography>
           <div style={{height: 300}}>
@@ -415,7 +439,7 @@ function Info({ station }: WidgetProps): JSX.Element {
       </Grid> */}
       </Grid>
     </>
-    );
+  );
 }
 
 export default Info;

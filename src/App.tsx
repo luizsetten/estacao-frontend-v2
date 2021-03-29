@@ -14,7 +14,9 @@ import GlobalStyle from './styles/GlobalStyles';
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#359830' },
+    primary: {
+      main: '#359830',
+    },
   },
 });
 

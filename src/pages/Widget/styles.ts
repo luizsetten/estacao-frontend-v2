@@ -10,7 +10,7 @@ export const Container = styled.div`
 
 export const TextLine = styled.div`
   display: flex;
-  background: #FFF;
+  background: #fff;
   width: 24em;
   height: 2em;
   border-radius: 1em;
@@ -20,7 +20,7 @@ export const TextLine = styled.div`
 
 export const WidgetContainer = styled.div`
   display: flex;
-  background: #EBEBEB;
+  background: #ebebeb;
   justify-content: space-evenly;
   border-radius: 15px;
   width: 450px;
