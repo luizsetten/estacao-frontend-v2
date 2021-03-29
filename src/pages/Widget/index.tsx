@@ -8,12 +8,16 @@ import {
   Paper,
   CardMedia,
   Card,
+  Box,
 } from '@material-ui/core';
 
 import axios from '../../services/axios';
 import history from '../../services/history';
 import { Container, TextLine, WidgetContainer } from './styles';
-import image from '../../images/sun.png';
+import sun from '../../images/sun.png';
+import rain1 from '../../images/rain1.png';
+import rain2 from '../../images/rain2.png';
+import rain3 from '../../images/rain3.png';
 
 interface Station {
   name: string;
@@ -38,7 +42,25 @@ interface Record extends Object {
   solarIncidence?: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+interface DataLineProps {
+  label: string;
+  value: string | number | undefined;
+  unity: string;
+}
+
+const DataLine = ({ label, value, unity }: DataLineProps) => (
+  <Grid item md={10}>
+    {/* Add hidden if value is undefined */}
+    <Paper>
+      <Box p={1}>
+        <Typography>
+          <strong>{label}</strong> {value} {unity}
+        </Typography>
+      </Box>
+    </Paper>
+  </Grid>
+);
+
 function Widget({ station }: WidgetProps): JSX.Element {
   const [rec, setRec] = useState<Record>({});
 
@@ -57,8 +79,16 @@ function Widget({ station }: WidgetProps): JSX.Element {
 
   useEffect(() => {
     loadRecord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function returnImage() {
+    if (rec && rec.rainfall && rec.rainfall > 0) {
+      if (rec.rainfall < 30) return rain1;
+      if (rec.rainfall < 50) return rain2;
+      return rain3;
+    }
+    return sun;
+  }
 
   return (
     <Container>
@@ -78,7 +108,10 @@ function Widget({ station }: WidgetProps): JSX.Element {
           <Grid container md={12} direction="row" justify="space-around">
             <Grid item>
               <Card>
-                <CardMedia image={image} style={{ width: 130, height: 130 }} />
+                <CardMedia
+                  image={returnImage()}
+                  style={{ width: 130, height: 130 }}
+                />
               </Card>
             </Grid>
             <Grid item>
@@ -99,45 +132,30 @@ function Widget({ station }: WidgetProps): JSX.Element {
               </Card>
             </Grid>
           </Grid>
-          <TextLine>
-            <Typography hidden={!rec.temperature}>
-              Temperatura: {rec.temperature}°C
-            </Typography>
-          </TextLine>
-          <TextLine>
-            <Typography hidden={!rec.pressure}>
-              Pressure: {rec.pressure}hPa
-            </Typography>
-          </TextLine>
-          <TextLine style={{ display: !rec.humidity ? 'none' : 'flex' }}>
-            <Typography>Humidade: {rec.humidity}%</Typography>
-          </TextLine>
-          <TextLine style={{ display: !rec.rainfall ? 'none' : 'flex' }}>
-            <Typography style={{ alignSelf: 'center' }}>
-              Precipitação: {rec.rainfall}mm/M²
-            </Typography>
-          </TextLine>
-          <TextLine style={{ display: !rec.windGust ? 'none' : 'flex' }}>
-            <Typography style={{ alignSelf: 'center' }}>
-              Rajada do vento: {rec.windGust}km/h
-            </Typography>
-          </TextLine>
-          <TextLine style={{ display: !rec.windDirection ? 'none' : 'flex' }}>
-            <Typography style={{ alignSelf: 'center' }}>
-              Direção do vento: {rec.windDirection}°
-            </Typography>
-          </TextLine>
-          <TextLine style={{ display: !rec.windSpeed ? 'none' : 'flex' }}>
-            <Typography style={{ alignSelf: 'center' }}>
-              Velocidade do vento: {rec.windSpeed}km/h
-            </Typography>
-          </TextLine>
-          <TextLine style={{ display: !rec.solarIncidence ? 'none' : 'flex' }}>
-            <Typography style={{ alignSelf: 'center' }}>
-              Incidencia solar: {rec.solarIncidence}W/M²
-            </Typography>
-          </TextLine>
-
+          <DataLine label="Temperatura:" value={rec.temperature} unity="°C" />
+          <DataLine label="Pressão:" value={rec.pressure} unity="hPa" />
+          <DataLine label="Humidade:" value={rec.humidity} unity="%" />
+          <DataLine label="Precipitação:" value={rec.rainfall} unity="mm/M²" />
+          <DataLine
+            label="Rajada do vento:"
+            value={rec.windGust}
+            unity="Km/h"
+          />
+          <DataLine
+            label="Direção do vento:"
+            value={rec.windDirection}
+            unity="°"
+          />
+          <DataLine
+            label="Velocidade do vento:"
+            value={rec.windSpeed}
+            unity="Km/h"
+          />
+          <DataLine
+            label="Incidência Solar:"
+            value={rec.solarIncidence}
+            unity="W/M²"
+          />
           <Button
             color="primary"
             onClick={() => history.push('/info')}
