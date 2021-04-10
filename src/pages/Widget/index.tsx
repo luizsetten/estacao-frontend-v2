@@ -13,7 +13,7 @@ import {
 
 import axios from '../../services/axios';
 import history from '../../services/history';
-import { Container, TextLine, WidgetContainer } from './styles';
+import { Container, WidgetContainer } from './styles';
 import sun from '../../images/sun.png';
 import rain1 from '../../images/rain1.png';
 import rain2 from '../../images/rain2.png';
@@ -36,10 +36,10 @@ interface Record extends Object {
   pressure?: number;
   humidity?: number;
   rainfall?: number;
-  windGust?: number;
-  windDirection?: number;
-  windSpeed?: number;
-  solarIncidence?: number;
+  wind_gust?: number;
+  wind_direction?: number;
+  wind_speed?: number;
+  solar_incidence?: number;
 }
 
 interface DataLineProps {
@@ -48,18 +48,20 @@ interface DataLineProps {
   unity: string;
 }
 
-const DataLine = ({ label, value, unity }: DataLineProps) => (
-  <Grid item md={10}>
-    {/* Add hidden if value is undefined */}
-    <Paper>
-      <Box p={1}>
-        <Typography>
-          <strong>{label}</strong> {value} {unity}
-        </Typography>
-      </Box>
-    </Paper>
-  </Grid>
-);
+const DataLine = ({ label, value, unity }: DataLineProps) => {
+  if (!value && value !== 0) return <></>;
+  return (
+    <Grid item md={10}>
+      <Paper>
+        <Box p={1}>
+          <Typography>
+            <strong>{label}</strong> {String(value).replace('.', ',')} {unity}
+          </Typography>
+        </Box>
+      </Paper>
+    </Grid>
+  );
+};
 
 function Widget({ station }: WidgetProps): JSX.Element {
   const [rec, setRec] = useState<Record>({});
@@ -68,12 +70,13 @@ function Widget({ station }: WidgetProps): JSX.Element {
     try {
       if (!station.secure_id) return;
 
-      const { data: record } = await axios.get<Record>(
+      const { data: record, status } = await axios.get<Record>(
         `/records/${station.secure_id}/last`
       );
+      if (status === 500) throw new Error('Internal error!');
       setRec(record);
     } catch (err) {
-      alert('erro');
+      console.log(err);
     }
   };
 
@@ -103,7 +106,7 @@ function Widget({ station }: WidgetProps): JSX.Element {
       <Typography hidden={!station.name} variant="h5">
         {station.name} - {station.city}/{station.uf}
       </Typography>
-      <WidgetContainer>
+      <WidgetContainer style={{ minHeight: 600 }}>
         <Grid container justify="center" style={{ marginTop: '1em' }}>
           <Grid container md={12} direction="row" justify="space-around">
             <Grid item>
@@ -127,7 +130,8 @@ function Widget({ station }: WidgetProps): JSX.Element {
                   variant="h4"
                   style={{ display: 'flex', alignItems: 'center' }}
                 >
-                  22°C
+                  {rec.temperature && String(rec.temperature).replace('.', ',')}{' '}
+                  °C
                 </Typography>
               </Card>
             </Grid>
@@ -138,22 +142,23 @@ function Widget({ station }: WidgetProps): JSX.Element {
           <DataLine label="Precipitação:" value={rec.rainfall} unity="mm/M²" />
           <DataLine
             label="Rajada do vento:"
-            value={rec.windGust}
+            value={rec.wind_gust}
             unity="Km/h"
           />
           <DataLine
             label="Direção do vento:"
-            value={rec.windDirection}
+            value={rec.wind_direction}
             unity="°"
           />
           <DataLine
             label="Velocidade do vento:"
-            value={rec.windSpeed}
+            value={rec.wind_speed}
             unity="Km/h"
           />
+
           <DataLine
             label="Incidência Solar:"
-            value={rec.solarIncidence}
+            value={rec.solar_incidence}
             unity="W/M²"
           />
           <Button

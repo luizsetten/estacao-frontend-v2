@@ -1,11 +1,11 @@
 export interface Record extends Object {
-  temperature?: number,
-  pressure?: number,
-  humidity?: number,
-  rainfall?: number,
-  windGust?: number,
-  windDirection?: number,
-  windSpeed?: number,
-  solarIncidence?: number,
-  created_at?: string,
+  temperature?: number;
+  pressure?: number;
+  humidity?: number;
+  rainfall?: number;
+  wind_gust?: number;
+  wind_direction?: number;
+  wind_speed?: number;
+  solar_incidence?: number;
+  created_at?: string;
 }
