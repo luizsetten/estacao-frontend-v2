@@ -68,7 +68,8 @@ const MyResponsiveLine = ({
       bottom: 50,
       left: 60,
     }}
-    pointBorderColor={{ from: 'serieColor' }}
+    pointBorderColor={data[0]?.color}
+    colors={data[0]?.color}
     pointBorderWidth={2}
     pointColor={{ theme: 'background' }}
     pointLabelYOffset={-12}
