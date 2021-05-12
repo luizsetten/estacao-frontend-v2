@@ -7,6 +7,8 @@ import {
   MuiThemeProvider,
   // SimplePaletteColorOptions,
 } from '@material-ui/core';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Routes from './routes';
 import history from './services/history';
@@ -25,6 +27,7 @@ function App(): JSX.Element {
     <MuiThemeProvider theme={theme}>
       <Router history={history}>
         <Routes />
+        <ToastContainer />
       </Router>
       <GlobalStyle />
     </MuiThemeProvider>

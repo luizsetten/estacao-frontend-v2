@@ -32,6 +32,11 @@ export default function Routes(): JSX.Element {
         path="/"
       />
       <Route
+        component={() => <Main setStation={setStation} station={station} />}
+        exact
+        path="/app"
+      />
+      <Route
         component={() => <Widget station={station} />}
         exact
         path="/widget"
